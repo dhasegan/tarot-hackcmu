@@ -12,17 +12,17 @@ from datetime import datetime
 
 from app.models import *
 
-@login_required
+# @login_required
 def discover(request):
 	context = {}
 	return render(request, 'pages/discover.html', context)
 
-@login_required
+# @login_required
 def dashboard(request):
 	context = {}
 	return render(request, 'pages/dashboard.html', context)
 
-@login_required
+# @login_required
 def add_question(request):
 	context = {}
 	return render(request, 'types/question.html', context)
