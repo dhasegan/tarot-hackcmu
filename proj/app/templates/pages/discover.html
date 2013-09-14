@@ -1,5 +1,17 @@
 {% extends 'pages/base.html' %}
 
 {% block content %}
-	{% include 'types/question.html' %}
+<div class="row-fluid">
+	<div class="span7 timeline">
+		<section id="timeline">
+			{% include 'types/question.html' %}
+			{% include 'types/question.html' %}
+		</section>
+	</div>
+	<div class="span5 userdetails">
+		<section>
+			Some stuff about user
+		</section>
+	</div>
+</div>
 {% endblock %}
