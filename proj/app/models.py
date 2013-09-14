@@ -18,7 +18,7 @@ class Question(models.Model):
 	downvote = models.IntegerField()
 
 class Answer(models.Model):
-	user = models.ForeignKey(BidUser);
+	user = models.ForeignKey(QUser);
 	question = models.ForeignKey(Question)
 	value = models.FloatField()
 	timeSubmit = models.DateField(auto_now=True)
