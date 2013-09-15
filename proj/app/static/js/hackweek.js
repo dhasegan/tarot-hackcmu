@@ -53,8 +53,6 @@ setInterval(function() {
 
 // UI SLIDER on resize
 $(window).resize(function() {
-	var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
-
 	var width = $('.ui-slider').parents('.qvalue')[0].offsetWidth;
 	$('.ui-slider').css('width', width);
 
