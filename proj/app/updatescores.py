@@ -76,7 +76,7 @@ def newPublicScore(oldscore, pval):
 
 #Returns tuple (new private score, new public score)
 def newScores(privatescore, publicscore, vote, avg, trueval, stdev):
-    if (stdev = 0):
+    if stdev == 0:
 		pval = 0
 	else:
 		pval = abs((vote-trueval)/stdev)
