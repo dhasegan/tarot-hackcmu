@@ -28,7 +28,7 @@ def discover(request):
     for question in questionsObj:
         midvalue = (question.maxValue - question.minValue)/2
         tr = question.timeEnd - timezone.now()
-        timeremaining = str(tr)#.strftime('%H:%M:%S')
+        timeremaining = str(tr.total_seconds())
         questions.append( {'question': question, 'timeremaining': timeremaining, 'midvalue': midvalue} )
     context['questions'] = questions
     return render(request, 'pages/discover.html', context)

@@ -1,11 +1,15 @@
-var timer = setInterval(function() {
+setInterval(function() {
 	/* Code that goes here:
 	 * Get the counter numbers from the html
 	 * Decrease that number by 1
 	 * Set the counter on the html to this new number
 	 * *Note* for now, keep the time in terms of seconds ONLY
 	 */
-}, 1000);
+	 $.each($('.counter'), function(i, l) {
+	 	var text = $(l).text()
+	 	debugger
+	 });
+}.bind(this), 1000);
 
 setTimeout(function() {
 	clearInterval(timer); //Stops the ticking of the timer
@@ -88,10 +92,6 @@ $('.submitquestion').click(function() {
 	  }
 	});
 	return false
-
-
-	// xmlhttp.open("GET","demo_get2.asp?fname=Henry&lname=Ford",true);
-	// xmlhttp.send();
 });
 
 // JAVASCRIPT FOR DATE
