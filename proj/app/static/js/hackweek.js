@@ -126,7 +126,13 @@ $('.questiontimeout').click(function() {
 });
 
 // Timepicker
-$('#timepicker1').timepicker();
+var currenttime = new Date( new Date().getTime() + 30*60*1000 );
+var currenttimestring = '';
+if (currenttime.getHours() > 12)
+	currenttimestring = currenttime.getHours() + ':' + currenttime.getMinutes() + ' PM';
+else 
+	currenttimestring = currenttime.getHours() + ':' + currenttime.getMinutes() + ' AM';
+$('#timepicker1').timepicker('setTime', currenttimestring);
 
 // Ajax request for sending Question update
 $('.submitquestion').click(function() {
