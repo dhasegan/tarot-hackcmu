@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate, hashers
 
 import datetime
+import time
 
 from app.models import *
 
@@ -40,6 +41,36 @@ def dashboard(request):
 @login_required
 def add_question(request):
     context = {}
+    if (request.method != 'POST'):
+        return render(request, 'types/empty.html', {})
+    if not 'text' in request.POST or not request.POST['text']:
+        error.append('No question')
+    if not 'minval' in request.POST or not request.POST['minval']:
+        error.append('No minval')
+    if not 'maxval' in request.POST or not request.POST['maxval']:
+        error.append('No maxval')
+    if not 'time' in request.POST or not request.POST['time']:
+        error.append('No time')
+    if not 'date' in request.POST or not request.POST['date']:
+        error.append('No date')
+    text = request.POST['text']
+    minval = int(request.POST['minval'])
+    maxval = int(request.POST['maxval'])
+    dateval = request.POST['date']
+    timeval = request.POST['time']
+    parsedTime = time.strptime(dateval + ' ' + timeval, "%m/%d/%y %I:%M %p")
+    datetimeParsed = datetime.datetime.fromtimestamp(time.mktime(parsedTime))
+    loc_dt = datetimeParsed.replace(tzinfo=timezone.get_default_timezone())
+    q = Question(text=text, minValue=minval, maxValue=maxval, timeEnd=loc_dt)
+    q.save()
+
+    midvalue = (q.maxValue - q.minValue)/2
+    tr = q.timeEnd - timezone.now()
+    timeremaining = str(tr)
+    question = {'question': q, 'timeremaining': timeremaining, 'midvalue': midvalue}
+
+    context['question'] = question
+
     return render(request, 'types/question.html', context)
 
 def signout(request):
