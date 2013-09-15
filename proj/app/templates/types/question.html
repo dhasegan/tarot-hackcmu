@@ -7,31 +7,35 @@
 
 		<div class="question-voter span6">
 			<div class="row-fluid">
-				<div class="minvalue span1">
-					{{ question.question.minValue }}
-				</div>
-				<div class="qvalue span5">
-					<div id="scrollbar" class="ui-slider">
-						<a href="#" class="ui-slider-handle" style="left: 50%;">
-						</a>
+				<form method="POST" class="answerform">
+					<div class="minvalue span1">
+						{{ question.question.minValue }}
 					</div>
-				</div>
-				<div class="maxvalue span1">
-					{{ question.question.maxValue }}
-				</div>
-				<div class="span2 curvalue">
-					{{ question.midvalue }}
-				</div>
-				<div class="thebutton span3">
-					<button class="btn btn-small btn-primary" type="button" data-loading-text="Loading..."> Submit </button>
-				</div>
+					<div class="qvalue span5">
+						<div id="scrollbar" class="ui-slider">
+							<a href="#" class="ui-slider-handle" style="left: 50%;">
+							</a>
+						</div>
+					</div>
+					<div class="maxvalue span1">
+						{{ question.question.maxValue }}
+					</div>
+					<div class="span2 curvalue">
+						{{ question.midvalue }}
+					</div>
+					<div class="thebutton span3">
+						<button class="btn btn-small btn-primary submitanswer" type="button" data-loading-text="Loading..."> Submit </button>
+					</div>
+					<input type="hidden" name="questionid" class="questionid" value="{{ question.question.id }}" > </input>
+					{% csrf_token %}
+				</form>
 			</div>
 		</div>
 	</div>
 
 	<div class="row-fluid">
 		<div class="span4">
-			<button class="btn btn-link"> details </button>
+			<button class="btn btn-link"></button>
 		</div>
 
 		<div class="countdown offset4 span4">

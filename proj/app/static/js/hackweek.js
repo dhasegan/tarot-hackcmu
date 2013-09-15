@@ -89,6 +89,12 @@ $(window).resize(function() {
 $('.logout').click(function() {
     window.location.href = "/logout/";
 });
+$('.discover-link').click(function() {
+    window.location.href = "/discover/";
+});
+$('.dashboard-link').click(function() {
+    window.location.href = "/dashboard/";
+});
 
 // Timepicker
 $('#timepicker1').timepicker();
@@ -220,3 +226,26 @@ var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(),
           checkout.hide();
         }).data('datepicker');
 		});
+
+
+// Ajax request for sending Answer update
+$('.submitanswer').click(function() {
+
+	var errors = []
+	var form = $($(this).parents('.answerform'));
+	var ans = parseFloat(form.children('.curvalue').text());
+	var qid = form.children('.questionid').val();
+	var csrf = form.children('input[name=csrfmiddlewaretoken]').attr('value');
+	var q = form.parents('.question');
+
+	var dataString = 'id='+ qid + '&ans=' + ans + '&csrfmiddlewaretoken=' + csrf;
+	$.ajax({
+	  type: "POST",
+	  url: "/add_answer",
+	  data: dataString,
+	  success: function(data) {
+	  	$(q).fadeOut('slow')
+	  }
+	});
+	return false
+});

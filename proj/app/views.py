@@ -74,6 +74,29 @@ def add_question(request):
 
     return render(request, 'types/question.html', context)
 
+@login_required
+def add_answer(request):
+    context = {}
+    if (request.method != 'POST'):
+        return render(request, 'types/empty.html', {})
+    if not 'id' in request.POST or not request.POST['id']:
+        error.append('No id')
+    if not 'ans' in request.POST or not request.POST['ans']:
+        error.append('No ans')
+    qid = int(request.POST['id'])
+    ans = float(request.POST['ans'])
+
+    question = Question.objects.filter(id=qid)[0]
+    user = QUser.objects.filter(username=request.user.username)[0]
+
+    if len(Answer.objects.filter(user=user, question=question)) > 0:
+        return render(request, 'types/empty.html', context);
+
+    answer = Answer(user=user, question=question, value=ans)
+    answer.save()
+
+    return render(request, 'types/empty.html', context)
+
 def signout(request):
     logout(request)
     return redirect('/login/')

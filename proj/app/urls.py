@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^discover/', 'app.views.discover'),
     url(r'^dashboard/', 'app.views.dashboard'),
 
-    url(r'^add_question$', 'app.views.add_question')
+    url(r'^add_answer$', 'app.views.add_answer'),
+    url(r'^add_question$', 'app.views.add_question'),
     
 )

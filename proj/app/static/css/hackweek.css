@@ -111,3 +111,7 @@ body {
 .attr {
 	font-weight: bold;
 }
+
+.question {
+	margin-top: 12px;
+}
