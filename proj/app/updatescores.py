@@ -17,7 +17,6 @@ Output: A TUPLE
 '''
 
 
-
 import math
 
 def weightedAvg(votes, userscores):
@@ -27,13 +26,13 @@ def weightedAvg(votes, userscores):
         name = entry[0]
         tot += entry[1] * userscores[name][0]
         wsum += userscores[name][0]
-    return tot / wsum
+    return tot/wsum
 
 #input is list of tuples (name, vote)
 def stdev(inputs):
     avg = 0
     for i in inputs:
-        avg += i[1];
+        avg += i[1]
     avg /= len(inputs)
     dev = 0
     for i in inputs:
@@ -59,12 +58,12 @@ def newPrivateScore(oldscore, pval, vote, trueval, avg):
     perchange = (0.7 - pval) * 0.1
     if perchange < 0:
         perchange *= 0.5
-        if perchange > 0.8:
-            perchange = 0.8
-        return oldscore * (1 - perchange)
+        if perchange < - 0.8:
+            perchange = - 0.8
+        return oldscore * (1 + perchange)
     
     if abs(avg - vote) > abs(avg - trueval):
-          perchange *= 1.25   
+          perchange *= 1.25
     return oldscore + (1 - oldscore) * perchange
 
 #Returns points received for answer 1 - 100
@@ -91,6 +90,5 @@ def parseVotes(votes, userscores):
         name = entry[0]
         privatescore = userscores[name][0]
         publicscore = userscores[name][1]
-        userscores[name] = newScores(privatescore, publicscore, entry[1],
-                                     avg, trueval, dev)
+        userscores[name] = newScores(privatescore, publicscore, entry[1],avg, trueval, dev)
     return userscores, trueval

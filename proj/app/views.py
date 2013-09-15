@@ -166,3 +166,33 @@ def signup(request):
         return render(request, 'pages/login.html', context)
 
     return render(request, 'pages/login.html', context)
+
+def update_scores():    
+    for i in range(1,len(Question.objects.all())+1):
+        if(Question.objects.all()[i-1].trueval==null && Question.objects.all()[i-1].timeEnd < timezone.now() ):
+            u_list = {}
+            v_list = []
+            # q_list.append(Question.objects.all()[i-1])
+            temp_1 = Answer.objects.all().filter(question = Question.objects.all()[i-1])
+            for j in range(len(temp_1)):
+                v_list.append((temp_1[j].user.username,temp_1[j].value))  # votes information
+                u_list[QUser.objects.all().filter(username = temp_1[j].user.username)[0].username] = \
+                [QUser.objects.all().filter(username = temp_1[j].user.username)[0].weight, \
+                QUser.objects.all().filter(username = temp_1[j].user.username)[0].score] # user weight and score information
+                results = parseVotes(votes,userscores)[0]                             # the updates for user sweights and scores
+                q_trueval = (temp_1[0].question.text, parseVotes(votes,userscores)[1])  # the trueval of the question
+                q_score_update = Question.objects.all().filter(text = q_trueval[0])
+                q_score_update[0].trueval = q_trueval[1]
+                a_score_update.save()
+                for k in range(len(result[0])):
+                    username = v_list[k][0]
+                    u_update = QUser.objects.all().filter(username=username)[0]
+                    u_update.weight =  results[username][0]
+                    u_update.score = results[username][1]
+                    u_update.save()
+
+
+
+
+
+
