@@ -11,9 +11,21 @@
 		</section>
 	</div>
 	<div class="span5 userdetails">
-		<section>
-			Some stuff about user
-		</section>
+		<div class="userdetails">
+			<div class="username">
+				User: {{ user.username }}
+			</div>
+			<ul>
+				<li>
+					<span class="attr">Score: </span>
+					<span class="value userscore">{{ user.score }}</span>
+				</li>
+				<li>
+					<span class="attr">Answered Questions: </span>
+					<span class="value useranswered">{{ useranswered }}</span>
+				</li>
+			</ul>
+		</div>
 	</div>
 </div>
 {% endblock %}

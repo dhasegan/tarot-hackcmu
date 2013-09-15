@@ -99,3 +99,15 @@ body {
 .nav-img {
 	height: 24px;
 }
+
+.hidden-seconds {
+	display: none;
+}
+
+.userdetails {
+	font-size: 15px;
+}
+
+.attr {
+	font-weight: bold;
+}

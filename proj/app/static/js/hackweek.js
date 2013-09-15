@@ -1,36 +1,89 @@
 setInterval(function() {
-	/* Code that goes here:
-	 * Get the counter numbers from the html
-	 * Decrease that number by 1
-	 * Set the counter on the html to this new number
-	 * *Note* for now, keep the time in terms of seconds ONLY
-	 */
-	 $.each($('.counter'), function(i, l) {
-	 	var text = $(l).text()
-	 	debugger
-	 });
+	 var hs = $('.hidden-seconds')
+	 $.each(hs, function(i, l) {
+	 	make_string = function(secs) {
+	 		if (secs < 1.0)
+	 			return "";
+	 		var sec = parseInt(secs) % 60;
+	 		var min = Math.floor(parseInt(secs) / 60) % 60 ;
+	 		var hour = Math.floor(parseInt(secs) / 3600) % 24;
+	 		var days = Math.floor(parseInt(secs) / (3600*24) );
+	 		var ss = sec.toString();
+	 		var sm = min.toString();
+	 		var sh = hour.toString();
+	 		var sd = days.toString();
+
+	 		if (sec < 10) {
+	 			ss = "0" + ss;
+	 		}
+	 		if (min < 10) {
+	 			sm = "0" + sm;
+	 		}
+	 		if (hour < 10) {
+	 			sh = "0" + sh;
+	 		}
+
+	 		if (days == 0) {
+	 			if (hour == 0) {
+	 				if (min == 0) {
+	 					if (sec == 0) {
+	 						return ""
+	 					}
+	 					return ss;
+	 				}
+	 				return sm + ":" + ss;
+	 			}
+	 			return sh + ":" + sm + ":" + ss;
+	 		}
+	 		return sd + " days " + sh + ":" + sm + ":" + ss;
+	 	}
+	 	var counter = $(l).siblings('.counter');
+	 	var secs = parseFloat($(l).text()) - 1;
+	 	$(l).text(secs)
+	 	var res = make_string(Math.floor(secs));
+	 	if (res == "") {
+	 		q = $(l).parents('.question')
+	 		$(q).fadeOut('slow')
+	 	}
+	 	counter.text(res);
+	 }.bind(this));
 }.bind(this), 1000);
-
-setTimeout(function() {
-	clearInterval(timer); //Stops the ticking of the timer
-	/* Code that goes here:
-	 * Removes the question or disables voting somehow
-	 */
-}, 60000); //Replace 60000 with how long the question lasts in milliseconds
-
 
 // UI SLIDER
 $('.ui-slider-handle').draggable({ axis: 'x', containment: "parent", stop: function() {
+	var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
+   	$(this).css("left", parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width() / 100)+"%");
 	var qcur = $(this).parents('.qvalue');
 	var val = parseInt($(this).css('left'));
 
 	var minv = parseFloat(qcur.siblings('.minvalue').text());
 	var maxv = parseFloat(qcur.siblings('.maxvalue').text());
 
-	var value = (val / 134) * (maxv - minv) + minv;
+	var value = realValue * (maxv - minv) + minv;
 
-	qcur.siblings('.curvalue').text(Math.round(value.toString(),2))
+	qcur.siblings('.curvalue').text((Math.round(value*10)/10).toString(),2)
 }});
+$(window).resize(function() {
+	var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
+
+	var width = $('.ui-slider').parents('.qvalue')[0].offsetWidth;
+	$('.ui-slider').css('width', width);
+
+	var sliders = $('.ui-slider-handle')
+	$.each(sliders, function(i, slider) {
+		var qcur = $(slider).parents('.qvalue');
+		var sliderObj = $(slider);
+
+		var minv = parseFloat(qcur.siblings('.minvalue').text());
+		var maxv = parseFloat(qcur.siblings('.maxvalue').text());
+
+		var realValue = (maxv - minv)/2 + minv;
+		var nominalValue = ((sliderObj.parents('.ui-slider').width() - 16)/2) / (sliderObj.parents('.ui-slider').width())
+
+   		$(this).css("left", parseInt(nominalValue * 100).toString() +"%");
+		qcur.siblings('.curvalue').text((Math.round(realValue*10)/10).toString(),2)
+	});
+});
 
 // LOGOUT LINK
 $('.logout').click(function() {
@@ -89,8 +142,23 @@ $('.submitquestion').click(function() {
 	  	var emp = $('.emptyspacefornewquestion')
 	  	var emphtml = '<div class="emptyspacefornewquestion"> </div>'
 	  	$(emp).replaceWith(emphtml + data)
+
+	  	$($('.ui-slider-handle')[0]).draggable({ axis: 'x', containment: "parent", stop: function() {
+			var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
+		   	$(this).css("left", parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width() / 100)+"%");
+			var qcur = $(this).parents('.qvalue');
+			var val = parseInt($(this).css('left'));
+
+			var minv = parseFloat(qcur.siblings('.minvalue').text());
+			var maxv = parseFloat(qcur.siblings('.maxvalue').text());
+
+			var value = realValue * (maxv - minv) + minv;
+
+			qcur.siblings('.curvalue').text((Math.round(value*10)/10).toString(),2)
+		}});
 	  }
 	});
+	$('.dropdown').toggleClass('open')
 	return false
 });
 
