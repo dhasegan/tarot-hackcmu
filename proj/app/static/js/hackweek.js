@@ -33,6 +33,66 @@ $('.logout').click(function() {
     window.location.href = "/logout/";
 });
 
+// Timepicker
+$('#timepicker1').timepicker();
+
+// Ajax request for sending Question update
+$('.submitquestion').click(function() {
+
+	var errors = []
+	var question = $('.dropdown-input').val();
+	var date = $('.dropdown-dateinput').val();
+	var time = $('.dropdown-timeinput').val();
+	var minval = $('.dropdown-minvalue').val();
+	var maxval = $('.dropdown-maxvalue').val();
+	var csrf = $(this).parent().siblings('input[name=csrfmiddlewaretoken]').attr('value');
+	var min, max;
+
+	if (question.length <= 0 || question.length >= 140){
+		alert('Please input a question!');
+		return;
+	}
+	if (date.length <= 0 || date.length >= 10) {
+		alert('Please input a date!')
+		return ;
+	}
+	if (time.length <= 0 || time.length >= 10) {
+		alert('Please input a time!')
+		return ;
+	}
+	if (minval.length <= 0 || minval.length >= 6) {
+		alert('Please input a minval!')
+		return ;
+	}
+	if (maxval.length <= 0 || maxval.length >= 6) {
+		alert('Please input a maxval!')
+		return ;
+	}
+	min = parseInt(minval)
+	max = parseInt(maxval)
+	if (min == NaN || max == NaN || min >= max) {
+		alert('Min and max values are not valid!')
+		return ;
+	}
+
+	var dataString = 'text='+ question + '&date=' + date + '&time=' + time + '&minval=' + minval + '&maxval=' + maxval + '&csrfmiddlewaretoken=' + csrf;
+	$.ajax({
+	  type: "POST",
+	  url: "/add_question",
+	  data: dataString,
+	  success: function(data) {
+	  	var tl = $('#timeline');
+	  	var emp = $('.emptyspacefornewquestion')
+	  	var emphtml = '<div class="emptyspacefornewquestion"> </div>'
+	  	$(emp).replaceWith(emphtml + data)
+	  }
+	});
+	return false
+
+
+	// xmlhttp.open("GET","demo_get2.asp?fname=Henry&lname=Ford",true);
+	// xmlhttp.send();
+});
 
 // JAVASCRIPT FOR DATE
 var nowTemp = new Date();

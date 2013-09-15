@@ -91,3 +91,7 @@ body {
 .form-signin {
 	text-align: center;
 }
+
+.dateinputfield {
+	max-width: 120px;	
+}

@@ -6,6 +6,9 @@ from django.http import HttpResponseRedirect
 # Decorator to use built-in authentication system
 from django.contrib.auth.decorators import login_required
 
+# timezone bullshit
+from django.utils import timezone
+
 # Used to create and manually log in a user
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate, hashers
@@ -23,8 +26,8 @@ def discover(request):
     questions = []
     for question in questionsObj:
         midvalue = (question.maxValue - question.minValue)/2
-        tr = question.timeEnd - datetime.datetime.now()
-        timeremaining = datetime.datetime.strptime(tr, '%H:%M:%S')
+        tr = question.timeEnd - timezone.now()
+        timeremaining = str(tr)#.strftime('%H:%M:%S')
         questions.append( {'question': question, 'timeremaining': timeremaining, 'midvalue': midvalue} )
     context['questions'] = questions
     return render(request, 'pages/discover.html', context)

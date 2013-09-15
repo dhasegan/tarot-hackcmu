@@ -23,19 +23,21 @@
                       <input class="dropdown-input" type="text" name="text" placeholder="Question" maxlength="140">
                     </li>
                     <li>
-                      Start: <input type="text" value="02/16/12" data-date-format="mm/dd/yy" id="dp1">
+                      End Date: <input class="dropdown-dateinput dateinputfield" type="text" value="02/16/12" data-date-format="mm/dd/yy" id="dp2">
                     </li>
                     <li>
-                      End: <input type="text" value="02/16/12" data-date-format="mm/dd/yy" id="dp2">
+                      End Time:
+                      <div class="input-append bootstrap-timepicker">
+                        <input id="timepicker1" type="text" class="dropdown-timeinput input-small">
+                        <span class="add-on"><i class="icon-time"></i></span>
+                      </div>
                     </li>
                     <li>
-                      Min Value: <input class="minvalue-dropdown" type="text" name="minval" maxlength="5">
+                      Min Value: <input class="dropdown-minvalue minvalue-dropdown" type="text" name="minval" maxlength="5">
+                      Max Value: <input class="dropdown-maxvalue maxvalue-dropdown" type="text" name="maxval" maxlength="5">
                     </li>
                     <li>
-                      Max Value: <input class="maxvalue-dropdown" type="text" name="maxval" maxlength="5">
-                    </li>
-                    <li>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-primary submitquestion">Submit</button>
                     </li>
                     {% csrf_token %}
                   </form>
