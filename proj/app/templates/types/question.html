@@ -2,13 +2,13 @@
 
 	<div class="row-fluid">
 		<div class="question-text span6">
-			Is android better than iPhone?
+			{{ question.question.text }}
 		</div>
 
 		<div class="question-voter span6">
 			<div class="row-fluid">
 				<div class="minvalue span1">
-					0
+					{{ question.question.minValue }}
 				</div>
 				<div class="qvalue span5">
 					<div id="scrollbar" class="ui-slider">
@@ -17,13 +17,13 @@
 					</div>
 				</div>
 				<div class="maxvalue span1">
-					100
+					{{ question.question.maxValue }}
 				</div>
 				<div class="span2 curvalue">
-					50
+					{{ question.midvalue }}
 				</div>
 				<div class="thebutton span3">
-					<button class="btn btn-small btn-primary" type="button"> Submit </button>
+					<button class="btn btn-small btn-primary" type="button" data-loading-text="Loading..."> Submit </button>
 				</div>
 			</div>
 		</div>
@@ -37,7 +37,7 @@
 		<div class="countdown offset4 span4">
 			Time left:
 			<span class="counter">
-				18:12
+				{{ question.timeremaining }}
 			</span>
 		</div>
 	</div>

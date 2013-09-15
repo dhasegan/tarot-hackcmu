@@ -4,18 +4,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class QUser(User):
-	score = models.FloatField()
-	weight = models.FloatField()
+	score = models.FloatField({ 'default': 0.0 })
+	weight = models.FloatField({ 'default': 0.0 })
 
 class Question(models.Model):
 	text = models.CharField(max_length=140)
 	description = models.CharField(max_length=1000)
-	timeStart = models.DateField(auto_now=True)
-	timeEnd = models.DateField()
+	timeStart = models.DateTimeField(auto_now=True)
+	timeEnd = models.DateTimeField()
 	minValue = models.FloatField()
 	maxValue = models.FloatField()
-	upvote = models.IntegerField()
-	downvote = models.IntegerField()
+	upvote = models.IntegerField(default= 0, null=True, blank=True)
+	downvote = models.IntegerField(default= 0, null=True, blank=True)
 
 class Answer(models.Model):
 	user = models.ForeignKey(QUser);
