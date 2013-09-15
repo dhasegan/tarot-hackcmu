@@ -83,6 +83,8 @@ def newScores(privatescore, publicscore, vote, avg, trueval, stdev):
 #votes is a list of tuples of (name, vote)
 #userscores is a dictionary of {"name":(private, public)}
 def parseVotes(votes, userscores):
+    if len(votes) == 0:
+        return userscores, None
     avg = unweightavg(votes)
     dev = stdev(votes)
     trueval = weightedAvg(votes, userscores)

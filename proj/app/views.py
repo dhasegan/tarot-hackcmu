@@ -17,6 +17,7 @@ import datetime
 import time
 
 from app.models import *
+import updatescores
 
 @login_required
 def home(request):
@@ -48,6 +49,8 @@ def discover(request):
 def dashboard(request):
     context = { 'page': 'dashboard' }
     user = QUser.objects.filter(username=request.user.username)[0]
+
+    update_scores()
 
     questionsObj = Question.objects.all()
     questions = []
@@ -151,11 +154,17 @@ def signup(request):
         if (len(QUser.objects.filter(username = request.POST['userName'])) > 0):
             user = QUser.objects.filter(username = request.POST['userName'])[0]
             if (user.check_password(request.POST['userPassword'])):
-                return redirect("/discover")
+                user = authenticate(username=request.POST['userName'], \
+                    password=request.POST['userPassword'])
+                if (user != None):
+                    login(request, user)
+                    return redirect("/discover")
+                else:
+                    return redirect("/login")
         else:
             if (len(request.POST['userPassword']) > 0):
                 new_user = QUser.objects.create_user(username=request.POST['userName'], \
-                    password=request.POST['userPassword'],score=0,weight=0)
+                    password=request.POST['userPassword'],score=0.0,weight=0.5)
                 new_user.save()
                 new_user = authenticate(username=request.POST['userName'], \
                     password=request.POST['userPassword'])
@@ -167,29 +176,31 @@ def signup(request):
 
     return render(request, 'pages/login.html', context)
 
-def update_scores():    
-    for i in range(1,len(Question.objects.all())+1):
-        if(Question.objects.all()[i-1].trueval==null && Question.objects.all()[i-1].timeEnd < timezone.now() ):
+def update_scores():
+    questions = Question.objects.filter(trueval__isnull=True)
+    for i in range(0,len(questions)):
+        if(questions[i].trueval!=None and questions[i].timeEnd < timezone.now() ):
             u_list = {}
             v_list = []
-            # q_list.append(Question.objects.all()[i-1])
-            temp_1 = Answer.objects.all().filter(question = Question.objects.all()[i-1])
+            # q_list.append(questions[i-1])
+            temp_1 = Answer.objects.filter(question = questions[i])
+            if (len(temp_1) == 0):
+                continue
             for j in range(len(temp_1)):
                 v_list.append((temp_1[j].user.username,temp_1[j].value))  # votes information
-                u_list[QUser.objects.all().filter(username = temp_1[j].user.username)[0].username] = \
-                [QUser.objects.all().filter(username = temp_1[j].user.username)[0].weight, \
-                QUser.objects.all().filter(username = temp_1[j].user.username)[0].score] # user weight and score information
-                results = parseVotes(votes,userscores)[0]                             # the updates for user sweights and scores
-                q_trueval = (temp_1[0].question.text, parseVotes(votes,userscores)[1])  # the trueval of the question
-                q_score_update = Question.objects.all().filter(text = q_trueval[0])
-                q_score_update[0].trueval = q_trueval[1]
-                a_score_update.save()
-                for k in range(len(result[0])):
-                    username = v_list[k][0]
-                    u_update = QUser.objects.all().filter(username=username)[0]
-                    u_update.weight =  results[username][0]
-                    u_update.score = results[username][1]
-                    u_update.save()
+                user = QUser.objects.all().filter(username = temp_1[j].user.username)[0]
+                u_list[user.username] = [user.weight, user.score] # user weight and score information
+
+            (results, q_trueval) = updatescores.parseVotes(v_list,u_list)                 # the updates for user sweights and scores the trueval of the question
+            q_score_update = questions[i]
+            q_score_update.trueval = q_trueval
+            q_score_update.save()
+            for k in range(len(results)):
+                username = v_list[k][0]
+                u_update = QUser.objects.all().filter(username=username)[0]
+                u_update.weight =  results[username][0]
+                u_update.score = results[username][1]
+                u_update.save()
 
 
 

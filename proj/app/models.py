@@ -16,7 +16,7 @@ class Question(models.Model):
 	maxValue = models.FloatField()
 	upvote = models.IntegerField(default= 0, null=True, blank=True)
 	downvote = models.IntegerField(default= 0, null=True, blank=True)
-	trueval = models.FloatField(default= null, null=True, blank=True)
+	trueval = models.FloatField(default=None, null=True, blank=True)
 
 class Answer(models.Model):
 	user = models.ForeignKey(QUser);
