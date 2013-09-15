@@ -187,7 +187,7 @@ def update_scores():
                 continue
             for j in range(len(temp_1)):
                 v_list.append((temp_1[j].user.username,temp_1[j].value))  # votes information
-                user = temp_1.user
+                user = temp_1[j].user
                 u_list[user.username] = [user.weight, user.score] # user weight and score information
 
             (results, q_trueval) = updatescores.parseVotes(v_list,u_list)                 # the updates for user sweights and scores the trueval of the question
