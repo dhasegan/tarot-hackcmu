@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class QUser(User):
 	score = models.FloatField({ 'default': 0.0 })
-	weight = models.FloatField({ 'default': 0.0 })
+	weight = models.FloatField({ 'default': 0.50 })
 
 class Question(models.Model):
 	text = models.CharField(max_length=140)
@@ -21,4 +21,4 @@ class Answer(models.Model):
 	user = models.ForeignKey(QUser);
 	question = models.ForeignKey(Question)
 	value = models.FloatField()
-	timeSubmit = models.DateField(auto_now=True)
+	timeSubmit = models.DateTimeField(auto_now=True)
