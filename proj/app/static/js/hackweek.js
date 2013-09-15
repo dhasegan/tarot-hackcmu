@@ -11,8 +11,6 @@ setTimeout(function() {
 	clearInterval(timer); //Stops the ticking of the timer
 	/* Code that goes here:
 	 * Removes the question or disables voting somehow
-	 * Runs the python script that takes the votes and user scores
-	 * and updates the database with the new user private/public scores
 	 */
 }, 60000); //Replace 60000 with how long the question lasts in milliseconds
 
