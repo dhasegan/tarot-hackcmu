@@ -47,7 +47,7 @@ def login(request):
             user = QUser.objects.filter(username = request.POST['userName'])[0]
             if (user.check_password(request.POST['userPassword'])):
             #print "username found in db"
-                return HttpResponseRedirect("pages/discover.html")            
+                return redirect("/discover")          
             # errors.append('Username is already taken.')                    	
         else:
             if (len(request.POST['userPassword']) > 0):
@@ -57,7 +57,7 @@ def login(request):
                 new_user.save()
                 # print "username saved"
                 # return redirect('pages/discover.html')
-                return HttpResponseRedirect("pages/discover.html")               
+                return redirect("/discover")
 
     if errors:
         # print "some errors"

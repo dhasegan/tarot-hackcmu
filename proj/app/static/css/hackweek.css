@@ -50,3 +50,37 @@
 .counter {
 	color: red;
 }
+
+hr {
+	margin: 0px;
+}
+
+
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media (max-width: 980px) {
+	.navbar-text.pull-right {
+	  float: none;
+	  padding-left: 5px;
+	  padding-right: 5px;
+	}
+}
+
+.dropdown-menu {
+	text-align: center;
+	width: 300px;
+}
+
+.dropdown-input {
+	width: 250px;
+}
+
+.datepicker {
+	z-index: 1031;
+}

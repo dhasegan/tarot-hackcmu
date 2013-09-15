@@ -7,9 +7,51 @@
     <meta name="author" content="hackweek">
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="{{ STATIC_URL }}css/datepicker.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}css/hackweek.css" rel="stylesheet" media="screen">
   </head>
   <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project name</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              Logged in as <a href="#" class="navbar-link">Username</a>
+            </p>
+            <ul class="nav">
+              <li {% if page == 'discover' %}class='active'{% endif %}><a href="#">Discover</a></li>
+              <li {% if page == 'dashboard'%}class='active'{% endif %}><a href="#">Dashboard</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add Question<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <form class="bs-docs-example">
+                    <li>
+                      <input class="dropdown-input" type="text" name="text" placeholder="Question" maxlength="140">
+                    </li>
+                    <li>
+                      Start: <input type="text" value="02/16/12" data-date-format="mm/dd/yy" id="dp1">
+                    </li>
+                    <li>
+                      End: <input type="text" value="02/16/12" data-date-format="mm/dd/yy" id="dp2">
+                    </li>
+                    <li>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </li>
+                    {% csrf_token %}
+                  </form>
+                </ul>
+              </li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid">
       {% block content %}
@@ -20,6 +62,7 @@
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ STATIC_URL }}js/bootstrap-datepicker.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}js/hackweek.js"></script>
   </body>
