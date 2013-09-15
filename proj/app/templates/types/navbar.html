@@ -17,6 +17,8 @@
             <ul class="nav">
               <li {% if page == 'discover' %}class='active'{% endif %}><a href="#" class="discover-link">Discover</a></li>
               <li {% if page == 'dashboard'%}class='active'{% endif %}><a href="#" class="dashboard-link">Dashboard</a></li>
+
+              {% if page == 'discover' %}
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add Question<b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -25,7 +27,7 @@
                       <input class="dropdown-input" type="text" name="text" placeholder="Question" maxlength="140">
                     </li>
                     <li>
-                      End Date: <input class="dropdown-dateinput dateinputfield" type="text" value="09/16/13" data-date-format="mm/dd/yy" id="dp2">
+                      End Date: <input class="dropdown-dateinput dateinputfield" type="text" value="09/15/13" data-date-format="mm/dd/yy" id="dp2">
                     </li>
                     <li>
                       End Time:
@@ -45,6 +47,7 @@
                   </form>
                 </ul>
               </li>
+              {% endif %}
             </ul>
           </div><!--/.nav-collapse -->
         </div>

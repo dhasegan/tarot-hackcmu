@@ -5,6 +5,7 @@
 			{{ question.question.text }}
 		</div>
 
+		{% if page == 'discover' %}
 		<div class="question-voter span6">
 			<div class="row-fluid">
 				<form method="POST" class="answerform">
@@ -31,6 +32,29 @@
 				</form>
 			</div>
 		</div>
+		{% endif %}
+		{% if page == 'dashboard' %}
+		<div class="question-voter-dashboard span6">
+			<div class="row-fluid">
+
+					<div class="span1">
+						set 
+					</div>
+					<div class="span2 curvalue">
+						{{ question.midvalue }}
+					</div>
+					<div class="span2">
+					 between
+					</div>
+					<div class="minvalue span2">
+						({{ question.question.minValue }}
+					</div>
+					<div class="maxvalue span2">
+						,{{ question.question.maxValue }})
+					</div>
+			</div>
+		</div>
+		{% endif %}
 	</div>
 
 	<div class="row-fluid">

@@ -43,26 +43,15 @@ setInterval(function() {
 	 	var res = make_string(Math.floor(secs));
 	 	if (res == "") {
 	 		q = $(l).parents('.question')
-	 		$(q).fadeOut('slow')
+	 		$($(l).parent()).html("<div class='endcountdown'> \
+	 			<a class='questiontimeout'> Question timeout </a> \
+	 			</div>")
 	 	}
 	 	counter.text(res);
 	 }.bind(this));
 }.bind(this), 1000);
 
-// UI SLIDER
-$('.ui-slider-handle').draggable({ axis: 'x', containment: "parent", stop: function() {
-	var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
-   	$(this).css("left", parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width() / 100)+"%");
-	var qcur = $(this).parents('.qvalue');
-	var val = parseInt($(this).css('left'));
-
-	var minv = parseFloat(qcur.siblings('.minvalue').text());
-	var maxv = parseFloat(qcur.siblings('.maxvalue').text());
-
-	var value = realValue * (maxv - minv) + minv;
-
-	qcur.siblings('.curvalue').text((Math.round(value*10)/10).toString(),2)
-}});
+// UI SLIDER on resize
 $(window).resize(function() {
 	var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
 
@@ -85,6 +74,43 @@ $(window).resize(function() {
 	});
 });
 
+// UI SLIDER setup 
+$('.ui-slider-handle').draggable({ axis: 'x', containment: "parent", stop: function() {
+	var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
+   	$(this).css("left", parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width() / 100)+"%");
+	var qcur = $(this).parents('.qvalue');
+	var val = parseInt($(this).css('left'));
+
+	var minv = parseFloat(qcur.siblings('.minvalue').text());
+	var maxv = parseFloat(qcur.siblings('.maxvalue').text());
+
+	var value = realValue * (maxv - minv) + minv;
+
+	qcur.siblings('.curvalue').text((Math.round(value*10)/10).toString(),2)
+}});
+
+// Ajax request for sending Answer update
+$('.submitanswer').click(function() {
+
+	var errors = []
+	var form = $($(this).parents('.answerform'));
+	var ans = parseFloat(form.children('.curvalue').text());
+	var qid = form.children('.questionid').val();
+	var csrf = form.children('input[name=csrfmiddlewaretoken]').attr('value');
+	var q = form.parents('.question');
+
+	var dataString = 'id='+ qid + '&ans=' + ans + '&csrfmiddlewaretoken=' + csrf;
+	$.ajax({
+	  type: "POST",
+	  url: "/add_answer",
+	  data: dataString,
+	  success: function(data) {
+	  	$(q).fadeOut('slow')
+	  }
+	});
+	return false
+});
+
 // LOGOUT LINK
 $('.logout').click(function() {
     window.location.href = "/logout/";
@@ -93,6 +119,9 @@ $('.discover-link').click(function() {
     window.location.href = "/discover/";
 });
 $('.dashboard-link').click(function() {
+    window.location.href = "/dashboard/";
+});
+$('.questiontimeout').click(function() {
     window.location.href = "/dashboard/";
 });
 
@@ -146,10 +175,14 @@ $('.submitquestion').click(function() {
 	  success: function(data) {
 	  	var tl = $('#timeline');
 	  	var emp = $('.emptyspacefornewquestion')
+	  	if (emp == undefined)
+	  		return ;
 	  	var emphtml = '<div class="emptyspacefornewquestion"> </div>'
+	  	var parent = $(emp).parent()
 	  	$(emp).replaceWith(emphtml + data)
 
-	  	$($('.ui-slider-handle')[0]).draggable({ axis: 'x', containment: "parent", stop: function() {
+		// UI SLIDER setup
+		$('.ui-slider-handle',$('.question')[0]).draggable({ axis: 'x', containment: "parent", stop: function() {
 			var realValue = parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width()-16)
 		   	$(this).css("left", parseInt($(this).css("left")) / ($(this).parents(".ui-slider").width() / 100)+"%");
 			var qcur = $(this).parents('.qvalue');
@@ -162,6 +195,30 @@ $('.submitquestion').click(function() {
 
 			qcur.siblings('.curvalue').text((Math.round(value*10)/10).toString(),2)
 		}});
+
+		// Ajax request for sending Answer update
+		$('.submitanswer', $('.question')[0]).click(function() {
+
+			var errors = []
+			var form = $($(this).parents('.answerform'));
+			var ans = parseFloat(form.children('.curvalue').text());
+			var qid = form.children('.questionid').val();
+			var csrf = form.children('input[name=csrfmiddlewaretoken]').attr('value');
+			var q = form.parents('.question');
+
+			var dataString = 'id='+ qid + '&ans=' + ans + '&csrfmiddlewaretoken=' + csrf;
+			$.ajax({
+			  type: "POST",
+			  url: "/add_answer",
+			  data: dataString,
+			  success: function(data) {
+			  	$(q).fadeOut('slow')
+			  }
+			});
+			return false
+		});
+
+
 	  }
 	});
 	$('.dropdown').toggleClass('open')
@@ -226,26 +283,3 @@ var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(),
           checkout.hide();
         }).data('datepicker');
 		});
-
-
-// Ajax request for sending Answer update
-$('.submitanswer').click(function() {
-
-	var errors = []
-	var form = $($(this).parents('.answerform'));
-	var ans = parseFloat(form.children('.curvalue').text());
-	var qid = form.children('.questionid').val();
-	var csrf = form.children('input[name=csrfmiddlewaretoken]').attr('value');
-	var q = form.parents('.question');
-
-	var dataString = 'id='+ qid + '&ans=' + ans + '&csrfmiddlewaretoken=' + csrf;
-	$.ajax({
-	  type: "POST",
-	  url: "/add_answer",
-	  data: dataString,
-	  success: function(data) {
-	  	$(q).fadeOut('slow')
-	  }
-	});
-	return false
-});

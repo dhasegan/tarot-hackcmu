@@ -19,6 +19,10 @@ import time
 from app.models import *
 
 @login_required
+def home(request):
+    return redirect('/discover/')
+
+@login_required
 def discover(request):
     context = { 'page': 'discover' }
     user = QUser.objects.filter(username=request.user.username)[0]
@@ -28,20 +32,47 @@ def discover(request):
     for question in questionsObj:
         midvalue = (question.maxValue - question.minValue)/2
         tr = question.timeEnd - timezone.now()
-        if (tr.total_seconds() > 0):
+        if (tr.total_seconds() > 0) and len(Answer.objects.filter(user=user, question=question))==0:
             timeremaining = str(tr.total_seconds())
             questions.append( {'question': question, 'timeremaining': timeremaining, 'midvalue': midvalue} )
+
+    tn = timezone.now()
+    questions.sort(key=lambda x: (x['question'].timeEnd-tn).total_seconds())
+
+    context['useranswered'] = len(Answer.objects.filter(user=user))
+    context['userscore'] = user.score
     context['questions'] = questions
     return render(request, 'pages/discover.html', context)
 
 @login_required
 def dashboard(request):
-    context = {}
+    context = { 'page': 'dashboard' }
+    user = QUser.objects.filter(username=request.user.username)[0]
+
+    questionsObj = Question.objects.all()
+    questions = []
+    for question in questionsObj:
+        tr = question.timeEnd - timezone.now()
+        answers = Answer.objects.filter(user=user, question=question)
+        if len(answers) > 0:
+            midvalue = answers[0].value
+            if (tr.total_seconds() > 0):
+                timeremaining = str(tr.total_seconds())
+            else:
+                timeremaining = str(0)
+            questions.append( {'question': question, 'timeremaining': timeremaining, 'midvalue': midvalue} )
+
+    tn = timezone.now()
+    questions.sort(key=lambda x: (x['question'].timeEnd-tn).total_seconds())
+            
+    context['questions'] = questions
+    context['userscore'] = user.score
+    context['useranswered'] = len(Answer.objects.filter(user=user))
     return render(request, 'pages/dashboard.html', context)
 
 @login_required
 def add_question(request):
-    context = {}
+    context = { 'page': 'discover' }
     if (request.method != 'POST'):
         return render(request, 'types/empty.html', {})
     if not 'text' in request.POST or not request.POST['text']:
@@ -65,7 +96,7 @@ def add_question(request):
     q = Question(text=text, minValue=minval, maxValue=maxval, timeEnd=loc_dt)
     q.save()
 
-    midvalue = (q.maxValue - q.minValue)/2
+    midvalue = (q.maxValue - q.minValue)/2 + q.minValue
     tr = q.timeEnd - timezone.now()
     timeremaining = str(tr.total_seconds())
     question = {'question': q, 'timeremaining': timeremaining, 'midvalue': midvalue}
@@ -132,7 +163,6 @@ def signup(request):
                 return redirect("/discover")
 
     if errors:
-        print errors
         return render(request, 'pages/login.html', context)
 
     return render(request, 'pages/login.html', context)

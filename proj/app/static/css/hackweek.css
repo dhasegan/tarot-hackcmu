@@ -115,3 +115,12 @@ body {
 .question {
 	margin-top: 12px;
 }
+.questiontimeout {
+	color: #00ee00;
+}
+
+.question-voter-dashboard .curvalue {
+	font-weight: bold;
+	text-align: center;
+	color: #f96600;
+}

@@ -1,0 +1,31 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+<div class="row-fluid">
+	<div class="span7 timeline">
+		<section id="timeline">
+			<div class="emptyspacefornewquestion"> </div>
+			{% for question in questions %}
+				{% include 'types/question.html' %}
+			{% endfor%}
+		</section>
+	</div>
+	<div class="span5 userdetails">
+		<div class="userdetails">
+			<div class="username">
+				User: {{ user.username }}
+			</div>
+			<ul>
+				<li>
+					<span class="attr">Score: </span>
+					<span class="value userscore">{{ userscore }}</span>
+				</li>
+				<li>
+					<span class="attr">Answered Questions: </span>
+					<span class="value useranswered">{{ useranswered }}</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
