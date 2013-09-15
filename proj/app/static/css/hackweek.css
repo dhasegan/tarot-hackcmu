@@ -115,7 +115,8 @@ body {
 .question {
 	margin-top: 12px;
 }
-.questiontimeout {
+.questiontimeout,
+.questionresult {
 	color: #00ee00;
 }
 

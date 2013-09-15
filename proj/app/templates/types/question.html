@@ -59,7 +59,9 @@
 
 	<div class="row-fluid">
 		<div class="span4">
-			<button class="btn btn-link"></button>
+			{% if question.question.trueval %}
+				Result: <span class="questionresult"> {{ question.question.trueval }} </span>
+			{% endif %}
 		</div>
 
 		<div class="countdown offset4 span4">

@@ -178,26 +178,25 @@ def signup(request):
 
 def update_scores():
     questions = Question.objects.filter(trueval__isnull=True)
-    for i in range(0,len(questions)):
-        if(questions[i].trueval!=None and questions[i].timeEnd < timezone.now() ):
+    for question in questions:
+        if question.trueval == None and question.timeEnd < timezone.now() :
             u_list = {}
             v_list = []
-            # q_list.append(questions[i-1])
-            temp_1 = Answer.objects.filter(question = questions[i])
+            temp_1 = Answer.objects.filter(question = question)
             if (len(temp_1) == 0):
                 continue
             for j in range(len(temp_1)):
                 v_list.append((temp_1[j].user.username,temp_1[j].value))  # votes information
-                user = QUser.objects.all().filter(username = temp_1[j].user.username)[0]
+                user = temp_1.user
                 u_list[user.username] = [user.weight, user.score] # user weight and score information
 
             (results, q_trueval) = updatescores.parseVotes(v_list,u_list)                 # the updates for user sweights and scores the trueval of the question
-            q_score_update = questions[i]
+            q_score_update = question
             q_score_update.trueval = q_trueval
             q_score_update.save()
             for k in range(len(results)):
                 username = v_list[k][0]
-                u_update = QUser.objects.all().filter(username=username)[0]
+                u_update = QUser.objects.filter(username=username)[0]
                 u_update.weight =  results[username][0]
                 u_update.score = results[username][1]
                 u_update.save()

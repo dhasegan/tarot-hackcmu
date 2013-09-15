@@ -30,11 +30,11 @@ def weightedAvg(votes, userscores):
 
 #input is list of tuples (name, vote)
 def stdev(inputs):
-    avg = 0
+    avg = 0.0
     for i in inputs:
         avg += i[1]
     avg /= len(inputs)
-    dev = 0
+    dev = 0.0
     for i in inputs:
         diff = avg - i[1]
         dev += pow(diff, 2)
