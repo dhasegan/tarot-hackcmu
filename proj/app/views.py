@@ -8,59 +8,73 @@ from django.contrib.auth.decorators import login_required
 
 # Used to create and manually log in a user
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate, hashers
+from django.contrib.auth import login, logout, authenticate, hashers
 
-from datetime import datetime
+import datetime
 
 from app.models import *
 
-# @login_required
+@login_required
 def discover(request):
-	context = {}
-	return render(request, 'pages/discover.html', context)
+    context = { 'page': 'discover' }
+    user = QUser.objects.filter(username=request.user.username)[0]
 
-# @login_required
+    questionsObj = Question.objects.all()
+    questions = []
+    for question in questionsObj:
+        midvalue = (question.maxValue - question.minValue)/2
+        tr = question.timeEnd - datetime.datetime.now()
+        timeremaining = datetime.datetime.strptime(tr, '%H:%M:%S')
+        questions.append( {'question': question, 'timeremaining': timeremaining, 'midvalue': midvalue} )
+    context['questions'] = questions
+    return render(request, 'pages/discover.html', context)
+
+@login_required
 def dashboard(request):
-	context = {}
-	return render(request, 'pages/dashboard.html', context)
+    context = {}
+    return render(request, 'pages/dashboard.html', context)
 
-# @login_required
+@login_required
 def add_question(request):
-	context = {}
-	return render(request, 'types/question.html', context)
+    context = {}
+    return render(request, 'types/question.html', context)
 
-def login(request):        
-    context = { 'page': "login" }       
+def signout(request):
+    logout(request)
+    return redirect('/login/')
+
+def signup(request):
+    context = { 'page': "login" }
+    if request.user and request.user.is_authenticated():
+        return redirect('/discover/')
+
+    if (request.method == 'GET'):
+        return render(request, 'pages/login.html', {})
 
     errors = []
     context['errors'] = errors
-        
-    # username
-    if not 'userName' in request.POST:  
-        # print "no username in request"
-        errors.append('Username is required.')        
-    if not 'userPassword' in request.POST:          
-        # print "no password in request"
-        errors.append('Password is required.')        
-    else:       
-        if (len(QUser.objects.filter(username = request.POST['userName'])) > 0):            
+
+    if not 'userName' in request.POST:
+        errors.append('Username is required.')
+    if not 'userPassword' in request.POST:
+        errors.append('Password is required.')
+    else:
+        if (len(QUser.objects.filter(username = request.POST['userName'])) > 0):
             user = QUser.objects.filter(username = request.POST['userName'])[0]
             if (user.check_password(request.POST['userPassword'])):
-            #print "username found in db"
-                return redirect("/discover")          
-            # errors.append('Username is already taken.')                    	
+                return redirect("/discover")
         else:
             if (len(request.POST['userPassword']) > 0):
                 new_user = QUser.objects.create_user(username=request.POST['userName'], \
-                    password=request.POST['userPassword'],score=0,weight=0)        	            
-                # print "new username is created"
+                    password=request.POST['userPassword'],score=0,weight=0)
                 new_user.save()
-                # print "username saved"
-                # return redirect('pages/discover.html')
+                new_user = authenticate(username=request.POST['userName'], \
+                    password=request.POST['userPassword'])
+                login(request, new_user)
                 return redirect("/discover")
 
     if errors:
-        # print "some errors"
-        return render(request, 'pages/login.html', context)        
-    
+        print errors
+        return render(request, 'pages/login.html', context)
+
     return render(request, 'pages/login.html', context)

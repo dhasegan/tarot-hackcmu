@@ -4,8 +4,9 @@
 <div class="row-fluid">
 	<div class="span7 timeline">
 		<section id="timeline">
-			{% include 'types/question.html' %}
-			{% include 'types/question.html' %}
+			{% for question in questions %}
+				{% include 'types/question.html' %}
+			{% endfor%}
 		</section>
 	</div>
 	<div class="span5 userdetails">

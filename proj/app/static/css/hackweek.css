@@ -80,7 +80,14 @@ body {
 .dropdown-input {
 	width: 250px;
 }
-
+.minvalue-dropdown, 
+.maxvalue-dropdown {
+	width: 50px;
+}
 .datepicker {
 	z-index: 1031;
+}
+
+.form-signin {
+	text-align: center;
 }
